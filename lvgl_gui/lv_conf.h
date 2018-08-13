@@ -8,14 +8,6 @@
 #ifndef LV_CONF_H
 #define LV_CONF_H
 
-/**************infiniteyuan comment*****************/
-#include "lvgl_disp_config.h"
-#include "lvgl_indev_config.h"
-#include "sdkconfig.h"
-/**************infiniteyuan comment*****************/
-
-#include "../../config.h" // ESPRESSIF COMMENT
-
 /*----------------
  * Dynamic memory
  *----------------*/
@@ -38,13 +30,8 @@
  *===================*/
 
 /* Horizontal and vertical resolution of the library.*/
-#if (CONFIG_LVGL_DISP_ROTATE == 1) || (CONFIG_LVGL_DISP_ROTATE == 3)
-	#define LV_HOR_RES          CONFIG_LVGL_DRIVER_SCREEN_HEIGHT
-	#define LV_VER_RES          CONFIG_LVGL_DRIVER_SCREEN_WIDTH
-#else
-	#define LV_HOR_RES          CONFIG_LVGL_DRIVER_SCREEN_WIDTH
-	#define LV_VER_RES          CONFIG_LVGL_DRIVER_SCREEN_HEIGHT
-#endif
+#define LV_HOR_RES          320
+#define LV_VER_RES          240
 
 #define LV_DPI              100
 
@@ -80,9 +67,9 @@
 #define LV_INDEV_LONG_PRESS_REP_TIME    100                    /*Repeated trigger period in long press [ms] */
 
 /*Color settings*/
-#ifdef LCD_COLORSPACE_R5G6B5
+//#ifdef LCD_COLORSPACE_R5G6B5
 #define LV_COLOR_DEPTH     16                     /*Color depth: 1/8/16/24*/
-#endif
+//#endif
 
 #ifdef LCD_COLORSPACE_R8G8B8
 #define LV_COLOR_DEPTH     24                     /*Color depth: 1/8/16/24*/
