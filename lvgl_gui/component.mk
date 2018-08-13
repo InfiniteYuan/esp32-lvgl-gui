@@ -8,7 +8,7 @@ ifndef CONFIG_LVGL_GUI_ENABLE
 COMPONENT_ADD_INCLUDEDIRS := 
 COMPONENT_SRCDIRS :=
 else
-LVGLLIB = engine/thirdparty/gui/lvgl
+LVGLLIB = lvgl
 
 COMPONENT_SRCDIRS += \
     ./include \
@@ -31,8 +31,6 @@ COMPONENT_ADD_INCLUDEDIRS := . \
     $(LVGLLIB)/lv_misc/lv_fonts \
     $(LVGLLIB)/lv_objx \
     $(LVGLLIB)/lv_themes \
-    engine \
-    engine/thirdparty/gui \
 
 COMPONENT_PRIV_INCLUDEDIRS +=  . \
     ./include \
@@ -44,8 +42,6 @@ COMPONENT_PRIV_INCLUDEDIRS +=  . \
     $(LVGLLIB)/lv_misc/lv_fonts \
     $(LVGLLIB)/lv_objx \
     $(LVGLLIB)/lv_themes \
-    engine \
-    engine/thirdparty/gui \
 
 ifdef CONFIG_LVGL_USE_CUSTOM_DRIVER
 COMPONENT_DEPENDS += $(call dequote,$(CONFIG_LVGL_CUSTOM_DRIVER_COMPONENT_NAME))
