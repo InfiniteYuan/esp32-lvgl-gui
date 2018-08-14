@@ -3,6 +3,10 @@
 #
 # (Uses default behaviour of compiling all source files in directory, adding 'include' to include path.)
 
+ifndef CONFIG_LVGL_GUI_ENABLE
+COMPONENT_ADD_INCLUDEDIRS := 
+COMPONENT_SRCDIRS :=
+else
 LVGLLIB = lvgl
 
 COMPONENT_SRCDIRS += \
@@ -42,3 +46,5 @@ ifdef CONFIG_LVGL_USE_CUSTOM_DRIVER
 COMPONENT_DEPENDS += gdriver
 #$(call dequote,$(CONFIG_LVGL_CUSTOM_DRIVER_COMPONENT_NAME))
 endif
+
+endif  #CONFIG_LVGL_GUI_ENABLE

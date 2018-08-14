@@ -8,6 +8,8 @@
 #ifndef LV_CONF_H
 #define LV_CONF_H
 
+#include "sdkconfig.h"
+
 /*----------------
  * Dynamic memory
  *----------------*/
@@ -30,8 +32,13 @@
  *===================*/
 
 /* Horizontal and vertical resolution of the library.*/
-#define LV_HOR_RES          320
-#define LV_VER_RES          240
+#if (CONFIG_LVGL_DISP_ROTATE == 1) || (CONFIG_LVGL_DISP_ROTATE == 3)
+	#define LV_HOR_RES          CONFIG_LVGL_DRIVER_SCREEN_HEIGHT
+	#define LV_VER_RES          CONFIG_LVGL_DRIVER_SCREEN_WIDTH
+#else
+	#define LV_HOR_RES          CONFIG_LVGL_DRIVER_SCREEN_WIDTH
+	#define LV_VER_RES          CONFIG_LVGL_DRIVER_SCREEN_HEIGHT
+#endif
 
 #define LV_DPI              100
 
