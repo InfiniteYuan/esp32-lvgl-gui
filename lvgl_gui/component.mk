@@ -38,3 +38,7 @@ COMPONENT_PRIV_INCLUDEDIRS +=  . \
     $(LVGLLIB)/lv_objx \
     $(LVGLLIB)/lv_themes \
 
+ifdef CONFIG_LVGL_USE_CUSTOM_DRIVER
+COMPONENT_DEPENDS += gdriver
+#$(call dequote,$(CONFIG_LVGL_CUSTOM_DRIVER_COMPONENT_NAME))
+endif
