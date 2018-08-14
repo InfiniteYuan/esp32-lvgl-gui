@@ -8,3 +8,4 @@ use lvgl on esp32,with some lcd、touch device drivers
 
 2.run `make menuconfig` to configuration gui
 
+3.add some drivers for lvgl (option)
