@@ -6,9 +6,12 @@
  */
 
 /* uGFX Includes */
+#include "ugfx_driver_config.h"
+
+#if CONFIG_UGFX_USE_CUSTOM_DRIVER
+
 #include "gos_freertos_priv.h"
 #include "gfx.h"
-#include "ugfx_driver_config.h"
 
 #if GFX_USE_GINPUT && GINPUT_NEED_MOUSE
 
@@ -139,3 +142,4 @@ const GMouseVMT const GMOUSE_DRIVER_VMT[1] = {{
 
 #endif /* GFX_USE_GINPUT && GINPUT_NEED_MOUSE */
 
+#endif /* CONFIG_UGFX_USE_CUSTOM_DRIVER */
