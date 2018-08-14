@@ -1,3 +1,6 @@
 [submodule "lvgl_gui/lvgl"]
 	path = lvgl_gui/lvgl
 	url = https://github.com/littlevgl/lvgl.git
+[submodule "spi_devices/lcd/Adafruit-GFX-Library"]
+	path = spi_devices/lcd/Adafruit-GFX-Library
+	url = https://github.com/adafruit/Adafruit-GFX-Library.git
