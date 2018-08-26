@@ -30,3 +30,13 @@
 *.exe
 *.out
 *.app
+
+# build
+build/
+.settings
+.config
+*.o
+*.pyc
+*.d
+*.old
+*.cproject
