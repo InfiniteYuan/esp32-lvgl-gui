@@ -1,16 +1,24 @@
+#ifndef _COM_GUI_LVGL_H
+#define _COM_GUI_LVGL_H
 
-#ifndef _GUI_LVGL_H
-#define _GUI_LVGL_H
+#ifdef CONFIG_LVGL_GUI_ENABLE
 
-#if CONFIG_LVGL_USE_CUSTOM_DRIVER
+#ifdef __cplusplus
+extern "C"
+{
+#endif
 
-#include "lvgl_disp_config.h"
-#include "lvgl_indev_config.h"
-
-#endif /* CONFIG_LVGL_USE_CUSTOM_DRIVER */
+#include "sdkconfig.h"
 
 #include "lv_conf.h"
 #include "lvgl.h"
+#include "lvgl_indev_config.h"
+#include "lvgl_disp_config.h"
+
+#ifdef __cplusplus
+}
+#endif
+
+#endif /* CONFIG_LVGL_GUI_ENABLE */
 
 #endif /* _GUI_LVGL_H */
-

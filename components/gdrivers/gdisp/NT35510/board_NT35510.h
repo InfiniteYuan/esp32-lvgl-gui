@@ -8,15 +8,18 @@
 #ifndef _GDISP_LLD_BOARD_H
 #define _GDISP_LLD_BOARD_H
 
+/* uGFX Config Includes */
 #include "sdkconfig.h"
-#include "ugfx_driver_config.h"
 
-#if UGFX_LCD_DRIVER_API_MODE
+#if CONFIG_UGFX_LCD_DRIVER_API_MODE
+
+/* uGFX Includes */
 #include "gos_freertos_priv.h"
 #include "gfx.h"
 
+/* LCD Includes */
 #include "lcd_adapter.h"
-#include "lcd_com.h"
+#include "i2s_lcd_com.h"
 #include "NT35510.h"
 
 // Static inline functions
@@ -75,9 +78,12 @@ static GFXINLINE void write_data_byte(GDisplay *g, uint8_t data)
     board_lcd_write_data_byte(data);
 }
 
-static GFXINLINE void write_cmddata(GDisplay *g, uint16_t cmd, uint32_t data)
+static GFXINLINE void blit_area(GDisplay *g)
 {
-    board_lcd_write_cmddata(cmd, data);
+    const uint16_t	*buffer;
+    buffer = (const uint16_t *)g->p.ptr;
+    buffer += g->p.y1 * g->p.x2 + g->p.x1;	// The buffer start position
+    board_lcd_blit_area(g->p.x, g->p.y, buffer, g->p.cx, g->p.cy);
 }
 
 static GFXINLINE void set_backlight(GDisplay *g, uint16_t data)
@@ -87,17 +93,17 @@ static GFXINLINE void set_backlight(GDisplay *g, uint16_t data)
 
 static GFXINLINE void set_viewport(GDisplay *g)
 {
-    WriteReg((uint16_t)(NT35510_CASET), (uint16_t)(g->p.x)>>8);
-    WriteReg((uint16_t)(NT35510_CASET+1), (uint16_t)(g->p.x) & 0xff);
-    WriteReg((uint16_t)(NT35510_CASET+2), (uint16_t)(g->p.x+g->p.cx-1) >> 8);
-    WriteReg((uint16_t)(NT35510_CASET+3), (uint16_t)(g->p.x+g->p.cx-1) & 0xff);
-    WriteReg((uint16_t)(NT35510_RASET), (uint16_t)(g->p.y)>>8);
-    WriteReg((uint16_t)(NT35510_RASET+1), (uint16_t)(g->p.y)&0xff);
-    WriteReg((uint16_t)(NT35510_RASET+2), (uint16_t)(g->p.y+g->p.cy-1) >> 8);
-    WriteReg((uint16_t)(NT35510_RASET+3), (uint16_t)(g->p.y+g->p.cy-1) & 0xff);
-    WriteCmd((uint16_t)NT35510_RAMWR);
+    board_lcd_write_reg((uint16_t)(NT35510_CASET), (uint16_t)(g->p.x) >> 8);
+    board_lcd_write_reg((uint16_t)(NT35510_CASET + 1), (uint16_t)(g->p.x) & 0xff);
+    board_lcd_write_reg((uint16_t)(NT35510_CASET + 2), (uint16_t)(g->p.x + g->p.cx - 1) >> 8);
+    board_lcd_write_reg((uint16_t)(NT35510_CASET + 3), (uint16_t)(g->p.x + g->p.cx - 1) & 0xff);
+    board_lcd_write_reg((uint16_t)(NT35510_RASET), (uint16_t)(g->p.y) >> 8);
+    board_lcd_write_reg((uint16_t)(NT35510_RASET + 1), (uint16_t)(g->p.y) & 0xff);
+    board_lcd_write_reg((uint16_t)(NT35510_RASET + 2), (uint16_t)(g->p.y + g->p.cy - 1) >> 8);
+    board_lcd_write_reg((uint16_t)(NT35510_RASET + 3), (uint16_t)(g->p.y + g->p.cy - 1) & 0xff);
+    board_lcd_write_cmd((uint16_t)NT35510_RAMWR);
 }
 
-#endif /* _GDISP_LLD_BOARD_H */
+#endif /* CONFIG_UGFX_LCD_DRIVER_API_MODE */
 
-#endif 
+#endif /* _GDISP_LLD_BOARD_H*/

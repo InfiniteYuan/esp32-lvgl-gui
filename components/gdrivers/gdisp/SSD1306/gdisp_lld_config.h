@@ -10,10 +10,6 @@
 
 #if GFX_USE_GDISP
 
-/*===========================================================================*/
-/* Driver hardware support.                                                  */
-/*===========================================================================*/
-
 #define GDISP_HARDWARE_FLUSH            TRUE    // This controller requires flushing
 #define GDISP_HARDWARE_DRAWPIXEL        TRUE
 #define GDISP_HARDWARE_PIXELREAD        TRUE
@@ -24,7 +20,7 @@
 
 // This controller supports a special gdispControl() to inverse the display.
 // Pass a parameter of 1 for inverse and 0 for normal.
-#define GDISP_CONTROL_INVERSE           (GDISP_CONTROL_LLD+0)
+#define GDISP_CONTROL_INVERSE           (GDISP_CONTROL_LLD + 0)
 
 #endif /* GFX_USE_GDISP */
 

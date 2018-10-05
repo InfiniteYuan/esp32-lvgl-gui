@@ -1,3 +1,10 @@
+/*
+ * This file is subject to the terms of the GFX License. If a copy of
+ * the license was not distributed with this file, you can obtain one at:
+ *
+ *              http://chibios-gfx.com/license.html
+ */
+
 #ifndef _NT35510_H_
 #define _NT35510_H_
 
@@ -47,4 +54,4 @@
 #define NT35510_GMCTRP1 0xE0
 #define NT35510_GMCTRN1 0xE1
 
-#endif
+#endif /* _NT35510_H_ */

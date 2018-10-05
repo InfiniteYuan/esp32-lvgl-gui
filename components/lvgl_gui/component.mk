@@ -1,15 +1,15 @@
 #
-# Main Makefile. This is basically the same as a component makefile.
+# "main" pseudo-component makefile.
 #
 # (Uses default behaviour of compiling all source files in directory, adding 'include' to include path.)
 
 ifndef CONFIG_LVGL_GUI_ENABLE
 COMPONENT_ADD_INCLUDEDIRS := 
-COMPONENT_SRCDIRS :=
+COMPONENT_SRCDIRS := 
 else
 LVGLLIB = lvgl
 
-COMPONENT_SRCDIRS += \
+COMPONENT_SRCDIRS := . \
     ./include \
     $(LVGLLIB) \
     $(LVGLLIB)/lv_core \
@@ -44,6 +44,8 @@ COMPONENT_PRIV_INCLUDEDIRS +=  . \
 
 ifdef CONFIG_LVGL_USE_CUSTOM_DRIVER
 COMPONENT_DEPENDS += $(call dequote,$(CONFIG_LVGL_CUSTOM_DRIVER_COMPONENT_NAME))
+else
+COMPONENT_DEPENDS += gdrivers
 endif
 
 endif  #CONFIG_LVGL_GUI_ENABLE

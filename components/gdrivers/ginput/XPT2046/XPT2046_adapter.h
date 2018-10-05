@@ -14,17 +14,18 @@
 #ifndef __IOT_UGFX_TOUCH_SCREEN_ADAPTER_H__
 #define __IOT_UGFX_TOUCH_SCREEN_ADAPTER_H__
 
-/*C Includes*/
+/* C Includes */
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
 
-/*RTOS Includes*/
+/* RTOS Includes */
 #include "freertos/FreeRTOS.h"
 #include "freertos/task.h"
 #include "freertos/event_groups.h"
 #include "freertos/semphr.h"
-/*SPI Includes*/
+
+/* SPI Includes */
 #include "iot_xpt2046.h"
 
 #ifdef __cplusplus

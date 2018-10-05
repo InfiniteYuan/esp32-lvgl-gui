@@ -11,5 +11,6 @@ LVGL_COMPONENT_DIRS += $(LVGL_COMPONENT_PATH)/components/spi_devices
 LVGL_COMPONENT_DIRS += $(LVGL_COMPONENT_PATH)/components/i2c_devices
 LVGL_COMPONENT_DIRS += $(LVGL_COMPONENT_PATH)/components/i2c_devices/sensor
 LVGL_COMPONENT_DIRS += $(LVGL_COMPONENT_PATH)/components/i2c_devices/others
+LVGL_COMPONENT_DIRS += $(LVGL_COMPONENT_PATH)/components/i2s_devices
 
 EXTRA_COMPONENT_DIRS += $(LVGL_COMPONENT_DIRS)

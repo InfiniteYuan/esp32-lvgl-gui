@@ -10,10 +10,6 @@
 
 #if GFX_USE_GDISP
 
-/*===========================================================================*/
-/* Driver hardware support.                                                  */
-/*===========================================================================*/
-
 #define GDISP_HARDWARE_FLUSH            TRUE    // This controller requires flushing
 #define GDISP_HARDWARE_DRAWPIXEL        TRUE
 #define GDISP_HARDWARE_PIXELREAD        TRUE

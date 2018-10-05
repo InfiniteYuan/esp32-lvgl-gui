@@ -3,7 +3,7 @@
  * 
  */
 
-//#if 0 /*Remove this to enable the content (Delete the last #endif too!)*/
+// #if 0 /*Remove this to enable the content (Delete the last #endif too!)*/
 
 #ifndef LV_CONF_H
 #define LV_CONF_H
@@ -32,7 +32,7 @@
  *===================*/
 
 /* Horizontal and vertical resolution of the library.*/
-#if (CONFIG_LVGL_DISP_ROTATE == 1) || (CONFIG_LVGL_DISP_ROTATE == 3)
+#if defined(CONFIG_LVGL_DISP_ROTATE_90) || defined(CONFIG_LVGL_DISP_ROTATE_270)
 	#define LV_HOR_RES          CONFIG_LVGL_DRIVER_SCREEN_HEIGHT
 	#define LV_VER_RES          CONFIG_LVGL_DRIVER_SCREEN_WIDTH
 #else
@@ -46,20 +46,29 @@
  * Required for buffered drawing, opacity and anti-aliasing
  * VDB makes the double buffering, you don't need to deal with it!
  * Typical size: ~1/10 screen */
+#if defined(CONFIG_LVGL_LCD_DRIVER_FRAMEBUFFER_MODE)
 #define LV_VDB_SIZE         (LV_VER_RES * LV_HOR_RES / 10)  /*Size of VDB in pixel count (1/10 screen size is good for first)*/
-#define LV_VDB_ADR          0                  /*Place VDB to a specific address (e.g. in external RAM) (0: allocate automatically into RAM)*/
+#elif defined(CONFIG_LVGL_LCD_DRIVER_API_MODE)
+#define LV_VDB_SIZE         0  /*Size of VDB in pixel count (1/10 screen size is good for first)*/
+#endif
+
+#define LV_VDB_ADR          0  /*Place VDB to a specific address (e.g. in external RAM) (0: allocate automatically into RAM)*/
 
 /* Use two Virtual Display buffers (VDB) parallelize rendering and flushing (optional)
  * The flushing should use DMA to write the frame buffer in the background*/
-#define LV_VDB_DOUBLE       0       /*1: Enable the use of 2 VDBs*/
-#define LV_VDB2_ADR         0       /*Place VDB2 to a specific address (e.g. in external RAM) (0: allocate automatically into RAM)*/
+#define LV_VDB_DOUBLE       CONFIG_LVGL_DRIVER_DOUBLE_BUFFER_ENABLE       /*1: Enable the use of 2 VDBs*/
+#define LV_VDB2_ADR         0                                             /*Place VDB2 to a specific address (e.g. in external RAM) (0: allocate automatically into RAM)*/
 
 /* Enable anti-aliasing (lines, and radiuses will be smoothed) */
+#if defined(CONFIG_LVGL_LCD_DRIVER_FRAMEBUFFER_MODE)
+#define LV_ANTIALIAS        1       /*1: Enable anti-aliasing*/
+#elif defined(CONFIG_LVGL_LCD_DRIVER_API_MODE)
 #define LV_ANTIALIAS        0       /*1: Enable anti-aliasing*/
+#endif
 
 /*Screen refresh settings*/
-#define LV_REFR_PERIOD      50    /*Screen refresh period in milliseconds*/
-#define LV_INV_FIFO_SIZE    32    /*The average count of objects on a screen */
+#define LV_REFR_PERIOD      CONFIG_LVGL_DRIVER_AUTO_FLUSH_INTERVAL    /*Screen refresh period in milliseconds*/
+#define LV_INV_FIFO_SIZE    32                                        /*The average count of objects on a screen */
 
 /*=================
    Misc. setting
@@ -74,14 +83,7 @@
 #define LV_INDEV_LONG_PRESS_REP_TIME    100                    /*Repeated trigger period in long press [ms] */
 
 /*Color settings*/
-//#ifdef LCD_COLORSPACE_R5G6B5
 #define LV_COLOR_DEPTH     16                     /*Color depth: 1/8/16/24*/
-//#endif
-
-#ifdef LCD_COLORSPACE_R8G8B8
-#define LV_COLOR_DEPTH     24                     /*Color depth: 1/8/16/24*/
-#endif
-
 #define LV_COLOR_TRANSP    LV_COLOR_LIME          /*Images pixels with this color will not be drawn (with chroma keying)*/
 
 /*Text settings*/
@@ -92,13 +94,14 @@
 #define USE_LV_ANIMATION        1               /*1: Enable all animations*/
 #define USE_LV_SHADOW           1               /*1: Enable shadows*/
 #define USE_LV_GROUP            1               /*1: Enable object groups (for keyboards)*/
-#define USE_LV_GPU              0               /*1: Enable GPU interface*/
+#define USE_LV_GPU              1               /*1: Enable GPU interface*/
 #define USE_LV_REAL_DRAW        1               /*1: Enable function which draw directly to the frame buffer instead of VDB (required if LV_VDB_SIZE = 0)*/
 #define USE_LV_FILESYSTEM       1               /*1: Enable file system (required by images*/
 
-/*Compiler attributes*/
+/*Compiler settings*/
 #define LV_ATTRIBUTE_TICK_INC                 /* Define a custom attribute to `lv_tick_inc` function */
 #define LV_ATTRIBUTE_TASK_HANDLER             /* Define a custom attribute to `lv_task_handler` function */
+#define LV_COMPILER_VLA_SUPPORTED    1        /* 1: Variable length array is supported*/
 
 /*================
  *  THEME USAGE
@@ -135,7 +138,7 @@
 #define USE_LV_FONT_DEJAVU_30_CYRILLIC     0
 #define USE_LV_FONT_SYMBOL_30              0
 
-#define USE_LV_FONT_DEJAVU_40              0
+#define USE_LV_FONT_DEJAVU_40              4
 #define USE_LV_FONT_DEJAVU_40_LATIN_SUP    0
 #define USE_LV_FONT_DEJAVU_40_CYRILLIC     0
 #define USE_LV_FONT_SYMBOL_40              0
@@ -257,8 +260,15 @@
 /*Switch (dependencies: lv_slider)*/
 #define USE_LV_SW       1
 
+/*************************
+ * Non-user section
+ *************************/
+#ifdef _MSC_VER                               /* Disable warnings for Visual Studio*/
+# define _CRT_SECURE_NO_WARNINGS
+#endif
+
 #endif /*LV_CONF_H*/
 
 
-//#endif /*Remove this to enable the content*/
+// #endif /*Remove this to enable the content*/
 

@@ -12,45 +12,44 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-#include "ugfx_driver_config.h"
-
-/*C Includes*/
+/* C Includes */
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
 
-/*RTOS Includes*/
+/* RTOS Includes */
 #include "freertos/FreeRTOS.h"
 #include "freertos/task.h"
 #include "freertos/event_groups.h"
 #include "freertos/semphr.h"
 
-/*I2C Includes*/
+/* I2C Includes */
 #include "iot_i2c_bus.h"
 #include "iot_ssd1306.h"
 #include "ssd1306_fonts.h"
 #include "driver/gpio.h"
 #include "lcd_adapter.h"
 
+/* ESP Includes */
 #include "sdkconfig.h"
 #include "esp_log.h"
 
-#define POWER_CNTL_IO               19
+#define POWER_CNTL_IO 19
 
-class CLcdAdapter: public CSsd1306
+class CLcdAdapter : public CSsd1306
 {
 public:
-    const uint8_t* pFrameBuffer = NULL;
-    CLcdAdapter(CI2CBus *p_i2c_bus):CSsd1306(p_i2c_bus)
+    const uint8_t *pFrameBuffer = NULL;
+    CLcdAdapter(CI2CBus *p_i2c_bus) : CSsd1306(p_i2c_bus)
     {
         gpio_config_t conf;
         conf.pin_bit_mask = (1 << POWER_CNTL_IO);
         conf.mode = GPIO_MODE_OUTPUT;
-        conf.pull_up_en = (gpio_pullup_t) 0;
-        conf.pull_down_en = (gpio_pulldown_t) 0;
-        conf.intr_type = (gpio_int_type_t) 0;
+        conf.pull_up_en = (gpio_pullup_t)0;
+        conf.pull_down_en = (gpio_pulldown_t)0;
+        conf.intr_type = (gpio_int_type_t)0;
         gpio_config(&conf);
-        gpio_set_level((gpio_num_t) POWER_CNTL_IO, 0);
+        gpio_set_level((gpio_num_t)POWER_CNTL_IO, 0);
     }
     void inline writeCmd(uint8_t cmd)
     {
@@ -60,47 +59,50 @@ public:
     {
         iot_ssd1306_write_byte(get_dev_handle(), data, SSD1306_DAT);
     }
-    void inline writeData(uint8_t* data, uint16_t length)
+    void inline writeData(uint8_t *data, uint16_t length)
     {
-        for(uint16_t i = 0; i < length; i++)
+        for (uint16_t i = 0; i < length; i++) {
             iot_ssd1306_write_byte(get_dev_handle(), data[i], SSD1306_DAT);
+        }
     }
 };
 
-static CLcdAdapter* lcd_obj = NULL;
-static CI2CBus* i2c_bus = NULL;
+static CLcdAdapter *lcd_obj = NULL;
+static CI2CBus *i2c_bus = NULL;
 
-#if UGFX_DRIVER_AUTO_FLUSH_ENABLE
+#if CONFIG_UGFX_DRIVER_AUTO_FLUSH_ENABLE
 SemaphoreHandle_t flush_sem = NULL;
+static uint16_t flush_width;
+static uint16_t flush_height;
 
-void board_lcd_flush_task(void* arg)
+void board_lcd_flush_task(void *arg)
 {
     portBASE_TYPE res;
     while (1) {
         res = xSemaphoreTake(flush_sem, portMAX_DELAY);
         if (res == pdTRUE) {
-            lcd_obj->draw_bitmap(0, 0, (const uint8_t*)lcd_obj->pFrameBuffer, UGFX_DRIVER_SCREEN_WIDTH, UGFX_DRIVER_SCREEN_HEIGHT);
+            lcd_obj->draw_bitmap(0, 0, (const uint8_t *)lcd_obj->pFrameBuffer, flush_width, flush_height);
             iot_ssd1306_refresh_gram(lcd_obj->get_dev_handle());
-            vTaskDelay(UGFX_DRIVER_AUTO_FLUSH_INTERVAL / portTICK_RATE_MS);
+            vTaskDelay(CONFIG_UGFX_DRIVER_AUTO_FLUSH_INTERVAL / portTICK_RATE_MS);
         }
     }
 }
+
 #endif
+
+#ifdef CONFIG_UGFX_GUI_ENABLE
 
 void board_lcd_init()
 {
-    ESP_LOGI("ESP_SSD1306", "board_lcd_init");
-
     /*Initialize LCD*/
-    i2c_bus = new CI2CBus(I2C_NUM_1, (gpio_num_t)UGFX_LCD_SCL_GPIO, (gpio_num_t)UGFX_LCD_SDA_GPIO);
+    i2c_bus = new CI2CBus((i2c_port_t)CONFIG_UGFX_LCD_IIC_NUM, (gpio_num_t)CONFIG_UGFX_LCD_SCL_GPIO, (gpio_num_t)CONFIG_UGFX_LCD_SDA_GPIO);
 
-    if(lcd_obj == NULL) {
+    if (lcd_obj == NULL) {
         lcd_obj = new CLcdAdapter(i2c_bus);
     }
 
-#if UGFX_DRIVER_AUTO_FLUSH_ENABLE
+#if CONFIG_UGFX_DRIVER_AUTO_FLUSH_ENABLE
     // For framebuffer mode and flush
-    printf("board_lcd_init 4\n");
     if (flush_sem == NULL) {
         flush_sem = xSemaphoreCreateBinary();
     }
@@ -108,9 +110,13 @@ void board_lcd_init()
 #endif
 }
 
-void board_lcd_flush(int16_t x, int16_t y, const uint8_t* bitmap, int16_t w, int16_t h)
+#endif
+
+void board_lcd_flush(int16_t x, int16_t y, const uint8_t *bitmap, int16_t w, int16_t h)
 {
-#if UGFX_DRIVER_AUTO_FLUSH_ENABLE
+#if CONFIG_UGFX_DRIVER_AUTO_FLUSH_ENABLE
+    flush_width = w;
+    flush_height = h;
     lcd_obj->pFrameBuffer = bitmap;
     xSemaphoreGive(flush_sem);
 #else
@@ -128,7 +134,7 @@ void board_lcd_write_data(uint8_t data)
     lcd_obj->writeData(data);
 }
 
-void board_lcd_write_datas(uint8_t* data, uint16_t length)
+void board_lcd_write_datas(uint8_t *data, uint16_t length)
 {
     lcd_obj->writeData(data, length);
 }
@@ -138,17 +144,15 @@ void board_lcd_set_backlight(uint16_t data)
     /* Code here*/
 }
 
-
-#if CONFIG_LVGL_USE_CUSTOM_DRIVER
+#ifdef CONFIG_LVGL_GUI_ENABLE
 
 /* lvgl include */
 #include "lvgl_disp_config.h"
-#include "iot_lvgl.h"
 
 /*Write the internal buffer (VDB) to the display. 'lv_flush_ready()' has to be called when finished*/
-void ex_disp_flush(int32_t x1, int32_t y1, int32_t x2, int32_t y2, const lv_color_t * color_p)
+void ex_disp_flush(int32_t x1, int32_t y1, int32_t x2, int32_t y2, const lv_color_t *color_p)
 {
-    lcd_obj->draw_bitmap((uint8_t)x1, (uint8_t)y1, (uint8_t *)color_p, (uint8_t)(x2-x1+1), (uint8_t)(y2-y1+1));
+    lcd_obj->draw_bitmap((uint8_t)x1, (uint8_t)y1, (uint8_t *)color_p, (uint8_t)(x2 - x1 + 1), (uint8_t)(y2 - y1 + 1));
     /* IMPORTANT!!!
      * Inform the graphics library that you are ready with the flushing*/
     lv_flush_ready();
@@ -161,22 +165,22 @@ void ex_disp_fill(int32_t x1, int32_t y1, int32_t x2, int32_t y2, lv_color_t col
 }
 
 /*Write pixel map (e.g. image) to the display*/
-void ex_disp_map(int32_t x1, int32_t y1, int32_t x2, int32_t y2, const lv_color_t * color_p)
+void ex_disp_map(int32_t x1, int32_t y1, int32_t x2, int32_t y2, const lv_color_t *color_p)
 {
-    lcd_obj->draw_bitmap((uint8_t)x1, (uint8_t)y1, (uint8_t *)color_p, (uint8_t)(x2-x1+1), (uint8_t)(y2-y1+1));
+    lcd_obj->draw_bitmap((uint8_t)x1, (uint8_t)y1, (uint8_t *)color_p, (uint8_t)(x2 - x1 + 1), (uint8_t)(y2 - y1 + 1));
 }
 
 void lvgl_lcd_display_init()
 {
     /*Initialize LCD*/
-    i2c_bus = new CI2CBus(I2C_NUM_1, (gpio_num_t)CONFIG_LVGL_LCD_SCL_GPIO, (gpio_num_t)CONFIG_LVGL_LCD_SDA_GPIO);
+    i2c_bus = new CI2CBus((i2c_port_t)CONFIG_LVGL_LCD_IIC_NUM, (gpio_num_t)CONFIG_LVGL_LCD_SCL_GPIO, (gpio_num_t)CONFIG_LVGL_LCD_SDA_GPIO);
 
-    if(lcd_obj == NULL) {
+    if (lcd_obj == NULL) {
         lcd_obj = new CLcdAdapter(i2c_bus);
     }
 
-    lv_disp_drv_t disp_drv;                         /*Descriptor of a display driver*/
-    lv_disp_drv_init(&disp_drv);                    /*Basic initialization*/
+    lv_disp_drv_t disp_drv;      /*Descriptor of a display driver*/
+    lv_disp_drv_init(&disp_drv); /*Basic initialization*/
 
     // switch(CONFIG_LVGL_DISP_ROTATE){
     //     default:
@@ -200,14 +204,14 @@ void lvgl_lcd_display_init()
 
     /* Set up the functions to access to your display */
     if (LV_VDB_SIZE != 0) {
-        disp_drv.disp_flush = ex_disp_flush;            /*Used in buffered mode (LV_VDB_SIZE != 0  in lv_conf.h)*/
+        disp_drv.disp_flush = ex_disp_flush; /*Used in buffered mode (LV_VDB_SIZE != 0  in lv_conf.h)*/
     } else if (LV_VDB_SIZE == 0) {
-        disp_drv.disp_fill = ex_disp_fill;              /*Used in unbuffered mode (LV_VDB_SIZE == 0  in lv_conf.h)*/
-        disp_drv.disp_map = ex_disp_map;                /*Used in unbuffered mode (LV_VDB_SIZE == 0  in lv_conf.h)*/
+        disp_drv.disp_fill = ex_disp_fill; /*Used in unbuffered mode (LV_VDB_SIZE == 0  in lv_conf.h)*/
+        disp_drv.disp_map = ex_disp_map;   /*Used in unbuffered mode (LV_VDB_SIZE == 0  in lv_conf.h)*/
     }
 
     /* Finally register the driver */
     lv_disp_drv_register(&disp_drv);
 }
 
-#endif
+#endif /* CONFIG_LVGL_GUI_ENABLE */

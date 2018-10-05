@@ -1,3 +1,10 @@
+/*
+ * This file is subject to the terms of the GFX License. If a copy of
+ * the license was not distributed with this file, you can obtain one at:
+ *
+ *              http://chibios-gfx.com/license.html
+ */
+
 #ifndef _ILI9341_H_
 #define _ILI9341_H_
 
@@ -88,4 +95,4 @@
 #define ILI9341_INTERFCTL_REG           0xF6
 #define ILI9341_PUMPRATIOCTL_REG        0xF7
 
-#endif
+#endif /* _ILI9341_H_ */
