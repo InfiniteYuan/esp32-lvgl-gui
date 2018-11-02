@@ -3,7 +3,7 @@
 # project subdirectory.
 #
 
-PROJECT_NAME := lvgl_example
+PROJECT_NAME := lvgl_2048
 #If IOT_SOLUTION_PATH is not defined, use relative path as default value
 LVGL_COMPONENT_PATH ?= $(abspath $(shell pwd)/../)
 

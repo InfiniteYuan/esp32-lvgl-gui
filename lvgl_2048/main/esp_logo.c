@@ -1,8 +1,11 @@
 #include <stdint.h>
+/* lvgl includes */
+#include "iot_lvgl.h"
 #include "lv_conf.h"
 #include "lvgl/lv_draw/lv_draw.h"
+#include "lvgl/lv_draw/lv_draw_img.h"
 
-static const uint8_t esp_logo_pixel_map[] = {
+const uint8_t esp_logo_pixel_map[] = {
 
 #if LV_COLOR_DEPTH == 1 || LV_COLOR_DEPTH == 8
 /*Pixel format: Red: 3 bit, Green: 3 bit, Blue: 2 bit*/
@@ -382,12 +385,12 @@ static const uint8_t esp_logo_pixel_map[] = {
     };
 
 
-const lv_img_t esp_logo = {
+lv_img_dsc_t esp_logo = {
+  .header.always_zero = 0,
   .header.w = 480,			/*Image width in pixel count*/	
   .header.h = 120,			/*Image height in pixel count*/
-  .header.alpha_byte = 0,		/*No alpha byte*/
-  .header.chroma_keyed = 0,	/*No chroma keying*/
-  .header.format = LV_IMG_FORMAT_INTERNAL_RAW,	/*It's a variable compiled into the code*/
-  .pixel_map = esp_logo_pixel_map	/*Pointer the array of image pixels.*/
+  .data_size = 57600 * LV_COLOR_SIZE / 8,
+  .header.cf = LV_IMG_CF_TRUE_COLOR,
+  .data = esp_logo_pixel_map	/*Pointer the array of image pixels.*/
 };
 
