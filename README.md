@@ -15,3 +15,7 @@ use lvgl on esp32,with some lcd、touch device drivers
 1.Tab-Set
 
 2.Game-2048
+
+## Video
+
+[Twitter Video](https://twitter.com/InfiniteYuan/status/1031745706862637056)
