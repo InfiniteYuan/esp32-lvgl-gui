@@ -14,6 +14,7 @@
 #ifndef _IOT_LCD_H_
 #define _IOT_LCD_H_
 /*This is the Adafruit subclass graphics file*/
+#define PROGMEM
 
 #include "string.h"
 #include "stdio.h"
@@ -271,6 +272,8 @@ public:
     int drawNumber(int long_num, uint16_t poX, uint16_t poY);
 
     int drawFloat(float floatNumber, uint8_t decimal, uint16_t poX, uint16_t poY);
+
+    size_t printf(const char *format, ...);
 };
 
 #endif

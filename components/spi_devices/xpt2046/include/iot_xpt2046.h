@@ -19,7 +19,6 @@
 #include "stdio.h"
 #include "driver/gpio.h"
 #include "driver/spi_master.h"
-#include "esp_partition.h"
 #include "freertos/semphr.h"
 #include "esp_log.h"
 
@@ -69,8 +68,7 @@ void iot_xpt2046_init(xpt_conf_t * xpt_conf, spi_device_handle_t * spi);
  * @return
  *     - read data
  */
-uint16_t iot_xpt2046_readdata(spi_device_handle_t spi, const uint8_t command,
-                              int len);
+uint16_t iot_xpt2046_readdata(spi_device_handle_t spi, const uint8_t command);
 
 #ifdef __cplusplus
 }

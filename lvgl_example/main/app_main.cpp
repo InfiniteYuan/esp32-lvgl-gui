@@ -177,7 +177,7 @@ extern "C" void app_main()
 
     vTaskDelay(20 / portTICK_PERIOD_MS);    // wait for execute lv_task_handler, avoid 'error'
 
-    lvgl_calibrate_mouse(indevdrv);
+    lvgl_calibrate_mouse(indevdrv, false);
 
 #ifdef LVGL_EXAMPLE
     littlevgl_demo();

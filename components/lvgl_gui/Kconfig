@@ -1,3 +1,137 @@
+
+menu "I2C devices"
+    config IOT_APDS9960_ENABLE
+        bool "APDS9960 ENABLE"
+        default y
+        help
+            "Select this one to enable APDS9960 device"   
+    config IOT_AT24C02_ENABLE
+        bool "AT24C02 ENABLE"
+        default y
+        help
+            "Select this one to enable AT24C02 device"
+    config IOT_BME280_ENABLE
+        bool "BME280 ENABLE"
+        default y
+        help
+            "Select this one to enable BME280 device"
+    config IOT_CH450_ENABLE
+        bool "CH450 ENABLE"
+        default y
+        help
+            "Select this one to enable CH450 device" 
+    config IOT_HT16C21_ENABLE
+        bool "HT16C21 ENABLE"
+        default y
+        help
+            "Select this one to enable HT16C21 device"
+    config IOT_IS31FL3XXX_ENABLE
+        bool "IS31FL3XXX ENABLE"
+        default y
+        help
+            "Select this one to enable IS31FL3XXX device"
+    config IOT_MCP23017_ENABLE
+        bool "MCP23017 ENABLE"
+        default y
+        help
+            "Select this one to enable MCP23017 device"
+    config IOT_OLED_ENABLE
+        bool "OLED_DEV_ENABLE(SSD1306)"
+        default y
+        help
+            "Select this one to enable OLED device component"
+        menu "OLED device"
+            depends on OLED_ENABLE 
+        endmenu     
+        
+    #------------------
+    #--  I2C sensor --- 
+    #------------------            
+    config IOT_BH1750_ENABLE
+        bool "SENSOR_BH1750_ENABLE"
+        default y
+        help
+            "Select this one to enable BH1750 device component"  
+    config IOT_HTS221_ENABLE
+        bool "SENSOR_HTS221_ENABLE"
+        default y
+        help
+            "Select this one to enable HTS221 device component"
+    config IOT_LIS2DH12_ENABLE
+        bool "SENSOR_LIS2DH12_ENABLE"
+        default y
+        help
+            "Select this one to enable LIS2DH12 device component"
+    config IOT_MVH3004D_ENABLE
+        bool "SENSOR_MVH3004D_ENABLE"
+        default y
+        help
+            "Select this one to enable MVH3004D device component"
+    config IOT_VEML6040_ENABLE
+        bool "SENSOR_VEML6040_ENABLE"
+        default y
+        help
+            "Select this one to enable VEML6040 device component"
+    config IOT_HDC2010_ENABLE
+        bool "SENSOR_HDC2010_ENABLE"
+        default y
+        help
+            "Select this one to enable HDC2010 device component"                    
+    config IOT_FT5X06_ENABLE
+        bool "SENSOR_FT5X06_ENABLE"
+        default y
+        help
+            "Select this one to enable FT5X06 device component"
+
+    config IOT_MPU6050_ENABLE
+        bool "SENSOR_MPU6050_ENABLE"
+        default y
+        help
+            "Select this one to enable MPU6050 device component"
+endmenu
+
+menu "SPI devices"
+    config IOT_LCD_ENABLE
+        bool "SPI_LCD_ENABLE"
+        default y
+        help
+            "Select this one to enable SPI LCD device" 
+    config IOT_EINK_ENABLE
+        bool "SPI_E-INK_ENABLE"
+        default y
+        help
+            "Select this one to enable SPI E-INK SCREEN device"
+    config IOT_TOUCH_SCREEN_ENABLE
+        bool "SPI_TOUCH_SCERRN_ENABLE"
+        default y
+        help
+            "Select this one to enable SPI TOUCH SCREEN device"
+endmenu
+
+menu "I2S devices"
+    config IOT_LCD_NT35510_ENABLE
+        bool "I2S_LCD_NT35510_ENABLE"
+        default y
+        help
+            "Select this one to enable NT35510 LCD device"      
+    config IOT_LCD_ILI9806_ENABLE
+        bool "I2S_LCD_ILI9806_ENABLE"
+        default y
+        help
+            "Select this one to enable ILI9806 LCD device"   
+
+    choice LCD_BITEMODE_CHOOSE
+        bool "Choose Bit Mode"
+            default BIT_MODE_16BIT
+
+        config BIT_MODE_16BIT
+            bool "16_BIT_MODE"
+        config BIT_MODE_8BIT
+            bool "8_BIT_MODE"
+
+    endchoice
+endmenu
+        
 menu "HMI Components"
 
     choice GUI_LIB_SELECT
@@ -65,6 +199,18 @@ menu "HMI Components"
             help 
                 "Select to enable uGFX touch screen"
 
+        config UGFX_DRIVER_TOGGLE_ENABLE
+            bool "uGFX Toggle Input Device Enable"
+            default n
+            help
+                "Select to enable uGFX Toggle input device"
+
+        config UGFX_DRIVER_AUDIO_ENABLE
+            bool "uGFX Audio Enable"
+            default n
+            help
+                "Select to enable uGFX Audio"
+
         choice UGFX_DRIVER_MODE
             prompt "Display Driver Mode"
             default UGFX_LCD_DRIVER_FRAMEBUFFER_MODE
@@ -111,6 +257,46 @@ menu "HMI Components"
         
         menu "Config Driver"
             depends on UGFX_USE_CONFIGURED_OPTIONS
+
+            choice UGFX_DRIVER_TOGGLE
+                prompt "Choose Toggle Input Driver"
+                depends on UGFX_DRIVER_TOGGLE_ENABLE
+
+                config UGFX_DRIVER_TOGGLE_BUTTON
+                    bool "BUTTON"
+
+                config UGFX_DRIVER_TOGGLE_TOUCHPAD
+                    bool "TOUCHPAD"
+
+            endchoice
+
+            menu "Button Toggle Input Device Configuration"
+                depends on UGFX_DRIVER_TOGGLE_BUTTON
+
+                config UGFX_TOGGLE_BUTTON_GPIO1
+                    int "uGFX Toggle Button Num 1's GPIO"
+                    range 0 39
+                    default 4
+                config UGFX_TOGGLE_BUTTON_GPIO2
+                    int "uGFX Toggle Button Num 2's GPIO"
+                    range 0 39
+                    default 15
+
+            endmenu
+
+            menu "TouchPad Toggle Input Device Configuration"
+                depends on UGFX_DRIVER_TOGGLE_TOUCHPAD
+
+                config UGFX_TOGGLE_TOUCHPAD_NUM1
+                    int "uGFX Toggle TouchPad Num 1"
+                    range 0 10
+                    default 3
+                config UGFX_TOGGLE_TOUCHPAD_NUM2
+                    int "uGFX Toggle TouchPad Num 2"
+                    range 0 10
+                    default 9
+
+            endmenu
                
             choice UGFX_DRIVER_TOUCH_SCREEN
                 prompt "Choose Touch Screen Driver"
@@ -192,8 +378,25 @@ menu "HMI Components"
                 endchoice
                 config UGFX_LCD_SPI_NUM
                     int
-                    default 1 if  UGFX_LCD_HSPI
-                    default 2 if  UGFX_LCD_VSPI
+                    default 1 if UGFX_LCD_HSPI
+                    default 2 if UGFX_LCD_VSPI
+                
+                choice UGFX_BCKL_ACTIVE_LEVEL_OPTIONAL
+                    prompt "Select Backlight Active Level"
+                    default UGFX_BCKL_ACTIVE_LEVEL_HIGH
+
+                    config UGFX_BCKL_ACTIVE_LEVEL_LOW
+                        bool "Backlight Active Low"
+                
+                    config UGFX_BCKL_ACTIVE_LEVEL_HIGH
+                        bool "Backlight Active High"
+
+                endchoice
+                config UGFX_BCKL_ACTIVE_LEVEL
+                    int
+                    default 0 if UGFX_BCKL_ACTIVE_LEVEL_LOW
+                    default 1 if UGFX_BCKL_ACTIVE_LEVEL_HIGH
+
                 config UGFX_LCD_SPI_CLOCK
                     int "uGFX LCD SPI Clock"
                     range 0 40000000
@@ -246,8 +449,25 @@ menu "HMI Components"
                 endchoice
                 config UGFX_LCD_SPI_NUM
                     int
-                    default 1 if  UGFX_LCD_HSPI
-                    default 2 if  UGFX_LCD_VSPI
+                    default 1 if UGFX_LCD_HSPI
+                    default 2 if UGFX_LCD_VSPI
+                
+                choice UGFX_BCKL_ACTIVE_LEVEL_OPTIONAL
+                    prompt "Select Backlight Active Level"
+                    default UGFX_BCKL_ACTIVE_LEVEL_HIGH
+
+                    config UGFX_BCKL_ACTIVE_LEVEL_LOW
+                        bool "Backlight Active Low"
+                
+                    config UGFX_BCKL_ACTIVE_LEVEL_HIGH
+                        bool "Backlight Active High"
+
+                endchoice
+                config UGFX_BCKL_ACTIVE_LEVEL
+                    int
+                    default 0 if UGFX_BCKL_ACTIVE_LEVEL_LOW
+                    default 1 if UGFX_BCKL_ACTIVE_LEVEL_HIGH
+
                 config UGFX_LCD_SPI_CLOCK
                     int "uGFX LCD SPI Clock"
                     range 0 40000000
@@ -311,8 +531,8 @@ menu "HMI Components"
                 endchoice
                 config UGFX_LCD_I2S_NUM
                     int
-                    default 0 if  UGFX_LCD_I2S0
-                    default 1 if  UGFX_LCD_I2S1
+                    default 0 if UGFX_LCD_I2S0
+                    default 1 if UGFX_LCD_I2S1
 
                 config UGFX_LCD_WR_GPIO
                     int "uGFX LCD WR GPIO"
@@ -481,17 +701,17 @@ menu "HMI Components"
                     
             config UGFX_DRIVER_SCREEN_WIDTH
                 int
-                default ILI9341_UGFX_DRIVER_SCREEN_WIDTH if  UGFX_DRIVER_ILI9341
-                default SSD1306_UGFX_DRIVER_SCREEN_WIDTH if  UGFX_DRIVER_SSD1306
-                default ST7789_UGFX_DRIVER_SCREEN_WIDTH  if  UGFX_DRIVER_ST7789
-                default NT35510_UGFX_DRIVER_SCREEN_WIDTH if  UGFX_DRIVER_NT35510
+                default ILI9341_UGFX_DRIVER_SCREEN_WIDTH if UGFX_DRIVER_ILI9341
+                default SSD1306_UGFX_DRIVER_SCREEN_WIDTH if UGFX_DRIVER_SSD1306
+                default ST7789_UGFX_DRIVER_SCREEN_WIDTH  if UGFX_DRIVER_ST7789
+                default NT35510_UGFX_DRIVER_SCREEN_WIDTH if UGFX_DRIVER_NT35510
                     
             config UGFX_DRIVER_SCREEN_HEIGHT
                 int
-                default ILI9341_UGFX_DRIVER_SCREEN_HEIGHT if  UGFX_DRIVER_ILI9341
-                default SSD1306_UGFX_DRIVER_SCREEN_HEIGHT if  UGFX_DRIVER_SSD1306
-                default ST7789_UGFX_DRIVER_SCREEN_HEIGHT  if  UGFX_DRIVER_ST7789
-                default NT35510_UGFX_DRIVER_SCREEN_HEIGHT if  UGFX_DRIVER_NT35510
+                default ILI9341_UGFX_DRIVER_SCREEN_HEIGHT if UGFX_DRIVER_ILI9341
+                default SSD1306_UGFX_DRIVER_SCREEN_HEIGHT if UGFX_DRIVER_SSD1306
+                default ST7789_UGFX_DRIVER_SCREEN_HEIGHT  if UGFX_DRIVER_ST7789
+                default NT35510_UGFX_DRIVER_SCREEN_HEIGHT if UGFX_DRIVER_NT35510
 
         endmenu
 
@@ -540,6 +760,12 @@ menu "HMI Components"
             help 
                 "Select to enable LittlevGL touch screen"
 
+        config LVGL_DRIVER_TOGGLE_ENABLE
+            bool "LittlevGL Toggle Input Device Enable"
+            default n
+            help
+                "Select to enable LittlevGL Toggle input device"
+
         choice LVGL_DRIVER_MODE
             prompt "Display Driver Mode"
             default LVGL_LCD_DRIVER_FRAMEBUFFER_MODE
@@ -586,6 +812,46 @@ menu "HMI Components"
 
         menu "Config Driver"
             depends on LVGL_USE_CONFIGURED_OPTIONS
+
+            choice LVGL_DRIVER_TOGGLE
+                prompt "Choose Toggle Input Driver"
+                depends on LVGL_DRIVER_TOGGLE_ENABLE
+
+                config LVGL_DRIVER_TOGGLE_BUTTON
+                    bool "BUTTON"
+
+                config LVGL_DRIVER_TOGGLE_TOUCHPAD
+                    bool "TOUCHPAD"
+
+            endchoice
+
+            menu "Button Toggle Input Device Configuration"
+                depends on LVGL_DRIVER_TOGGLE_BUTTON
+
+                config LVGL_TOGGLE_BUTTON_GPIO1
+                    int "LittlevGL Toggle Button Num 1's GPIO"
+                    range 0 39
+                    default 4
+                config LVGL_TOGGLE_BUTTON_GPIO2
+                    int "LittlevGL Toggle Button Num 2's GPIO"
+                    range 0 39
+                    default 15
+
+            endmenu
+
+            menu "TouchPad Toggle Input Device Configuration"
+                depends on LVGL_DRIVER_TOGGLE_TOUCHPAD
+
+                config LVGL_TOGGLE_TOUCHPAD_NUM1
+                    int "LittlevGL Toggle TouchPad Num 1"
+                    range 0 10
+                    default 3
+                config LVGL_TOGGLE_TOUCHPAD_NUM2
+                    int "LittlevGL Toggle TouchPad Num 2"
+                    range 0 10
+                    default 9
+
+            endmenu
                
             choice LVGL_DRIVER_TOUCH_SCREEN
                 prompt "Choose Touch Screen Driver"
@@ -667,8 +933,25 @@ menu "HMI Components"
                 endchoice
                 config LVGL_LCD_SPI_NUM
                     int
-                    default 1 if  LVGL_LCD_HSPI
-                    default 2 if  LVGL_LCD_VSPI
+                    default 1 if LVGL_LCD_HSPI
+                    default 2 if LVGL_LCD_VSPI
+                
+                choice LVGL_BCKL_ACTIVE_LEVEL_OPTIONAL
+                    prompt "Select Backlight Active Level"
+                    default LVGL_BCKL_ACTIVE_LEVEL_HIGH
+
+                    config LVGL_BCKL_ACTIVE_LEVEL_LOW
+                        bool "Backlight Active Low"
+                
+                    config LVGL_BCKL_ACTIVE_LEVEL_HIGH
+                        bool "Backlight Active High"
+
+                endchoice
+                config LVGL_BCKL_ACTIVE_LEVEL
+                    int
+                    default 0 if LVGL_BCKL_ACTIVE_LEVEL_LOW
+                    default 1 if LVGL_BCKL_ACTIVE_LEVEL_HIGH
+
                 config LVGL_LCD_SPI_CLOCK
                     int "LittlevGL LCD SPI Clock"
                     range 0 40000000
@@ -721,8 +1004,25 @@ menu "HMI Components"
                 endchoice
                 config LVGL_LCD_SPI_NUM
                     int
-                    default 1 if  LVGL_LCD_HSPI
-                    default 2 if  LVGL_LCD_VSPI
+                    default 1 if LVGL_LCD_HSPI
+                    default 2 if LVGL_LCD_VSPI
+                
+                choice LVGL_BCKL_ACTIVE_LEVEL_OPTIONAL
+                    prompt "Select Backlight Active Level"
+                    default LVGL_BCKL_ACTIVE_LEVEL_HIGH
+
+                    config LVGL_BCKL_ACTIVE_LEVEL_LOW
+                        bool "Backlight Active Low"
+                
+                    config LVGL_BCKL_ACTIVE_LEVEL_HIGH
+                        bool "Backlight Active High"
+
+                endchoice
+                config LVGL_BCKL_ACTIVE_LEVEL
+                    int
+                    default 0 if LVGL_BCKL_ACTIVE_LEVEL_LOW
+                    default 1 if LVGL_BCKL_ACTIVE_LEVEL_HIGH
+
                 config LVGL_LCD_SPI_CLOCK
                     int "LittlevGL LCD SPI Clock"
                     range 0 40000000
@@ -786,8 +1086,8 @@ menu "HMI Components"
                 endchoice
                 config LVGL_LCD_I2S_NUM
                     int
-                    default 0 if  LVGL_LCD_I2S0
-                    default 1 if  LVGL_LCD_I2S1
+                    default 0 if LVGL_LCD_I2S0
+                    default 1 if LVGL_LCD_I2S1
 
                 config LVGL_LCD_WR_GPIO
                     int "LittlevGL LCD WR GPIO"
@@ -956,17 +1256,17 @@ menu "HMI Components"
                     
             config LVGL_DRIVER_SCREEN_WIDTH
                 int
-                default ILI9341_LVGL_DRIVER_SCREEN_WIDTH if  LVGL_DRIVER_ILI9341
-                default SSD1306_LVGL_DRIVER_SCREEN_WIDTH if  LVGL_DRIVER_SSD1306
-                default ST7789_LVGL_DRIVER_SCREEN_WIDTH  if  LVGL_DRIVER_ST7789
-                default NT35510_LVGL_DRIVER_SCREEN_WIDTH if  LVGL_DRIVER_NT35510
+                default ILI9341_LVGL_DRIVER_SCREEN_WIDTH if LVGL_DRIVER_ILI9341
+                default SSD1306_LVGL_DRIVER_SCREEN_WIDTH if LVGL_DRIVER_SSD1306
+                default ST7789_LVGL_DRIVER_SCREEN_WIDTH  if LVGL_DRIVER_ST7789
+                default NT35510_LVGL_DRIVER_SCREEN_WIDTH if LVGL_DRIVER_NT35510
                     
             config LVGL_DRIVER_SCREEN_HEIGHT
                 int
-                default ILI9341_LVGL_DRIVER_SCREEN_HEIGHT if  LVGL_DRIVER_ILI9341
-                default SSD1306_LVGL_DRIVER_SCREEN_HEIGHT if  LVGL_DRIVER_SSD1306
-                default ST7789_LVGL_DRIVER_SCREEN_HEIGHT  if  LVGL_DRIVER_ST7789
-                default NT35510_LVGL_DRIVER_SCREEN_HEIGHT if  LVGL_DRIVER_NT35510
+                default ILI9341_LVGL_DRIVER_SCREEN_HEIGHT if LVGL_DRIVER_ILI9341
+                default SSD1306_LVGL_DRIVER_SCREEN_HEIGHT if LVGL_DRIVER_SSD1306
+                default ST7789_LVGL_DRIVER_SCREEN_HEIGHT  if LVGL_DRIVER_ST7789
+                default NT35510_LVGL_DRIVER_SCREEN_HEIGHT if LVGL_DRIVER_NT35510
 
         endmenu
 

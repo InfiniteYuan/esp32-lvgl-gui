@@ -4,7 +4,7 @@
 #
 
 PROJECT_NAME := lvgl_2048
-#If IOT_SOLUTION_PATH is not defined, use relative path as default value
+#If LVGL_COMPONENT_PATH is not defined, use relative path as default value
 LVGL_COMPONENT_PATH ?= $(abspath $(shell pwd)/../)
 
 include $(LVGL_COMPONENT_PATH)/components/component_conf.mk

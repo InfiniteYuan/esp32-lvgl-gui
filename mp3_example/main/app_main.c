@@ -713,7 +713,7 @@ void app_main()
 
     vTaskDelay(20 / portTICK_PERIOD_MS);    // wait for execute lv_task_handler, avoid 'error'
 
-    lvgl_calibrate_mouse(indevdrv);
+    lvgl_calibrate_mouse(indevdrv, false);
 
 #ifdef LVGL_TEST_THEME
     // lv_theme_t *th = lv_theme_alien_init(100, NULL);

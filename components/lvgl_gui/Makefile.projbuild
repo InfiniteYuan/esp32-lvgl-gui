@@ -1,0 +1,7 @@
+$(shell sed -i '405c // static inline lv_color_t lv_color_hex(uint32_t c){' $(COMPONENT_PATH)/lvgl/lv_misc/lv_color.h)
+$(shell sed -i '406c //     return LV_COLOR_HEX(c);' $(COMPONENT_PATH)/lvgl/lv_misc/lv_color.h)
+$(shell sed -i '407c // }' $(COMPONENT_PATH)/lvgl/lv_misc/lv_color.h)
+
+$(shell sed -i '409c // static inline lv_color_t lv_color_hex3(uint32_t c){' $(COMPONENT_PATH)/lvgl/lv_misc/lv_color.h)
+$(shell sed -i '410c //     return LV_COLOR_HEX3(c);' $(COMPONENT_PATH)/lvgl/lv_misc/lv_color.h)
+$(shell sed -i '411c // }' $(COMPONENT_PATH)/lvgl/lv_misc/lv_color.h)
