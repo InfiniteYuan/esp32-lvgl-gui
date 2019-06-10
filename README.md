@@ -20,6 +20,8 @@ use lvgl on esp32,with some lcd、touch device drivers
 
 ## Video
 
-[Tab-Set Twitter Video](https://twitter.com/InfiniteYuan/status/1031745706862637056)
-[2048 Twitter Video](https://twitter.com/InfiniteYuan/status/1048106496649641985)
-[MP3 Twitter Video](https://twitter.com/InfiniteYuan/status/1063739310275350528)
+ - [Tab-Set Twitter Video](https://twitter.com/InfiniteYuan/status/1031745706862637056)
+
+ - [2048 Twitter Video](https://twitter.com/InfiniteYuan/status/1048106496649641985)
+
+ - [MP3 Twitter Video](https://twitter.com/InfiniteYuan/status/1063739310275350528)
